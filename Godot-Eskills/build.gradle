@@ -6,13 +6,19 @@ android {
     compileSdk 31
 
     defaultConfig {
-        minSdk 21
+        minSdk 19
         targetSdk 31
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "GodotEskills.${variant.name}.aar"
+        }
     }
 
     buildTypes {
@@ -29,6 +35,6 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     compileOnly files('libs/godot-lib.3.4.stable.release.aar')
 }
