@@ -9,27 +9,21 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import org.godotengine.godot.Godot;
-import org.godotengine.godot.plugin.GodotPlugin;
 import org.godotengine.godot.plugin.UsedByGodot;
 
 import java.util.List;
 
-public class Eskills extends GodotPlugin {
+public class Eskills extends Godot.SingletonBase {
     private static final int REQUEST_CODE = 123;
-    public static final String SESSION = "SESSION";
+    private static final String SESSION = "SESSION";
     private static final String TAG = "godot";
-    private Activity activity;
+
+    protected Activity activity = null;
     private String sessionToken;
 
-    public Eskills(Godot godot) {
-        super(godot);
-        activity = godot.getActivity();
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onMainActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult called");
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             sessionToken = data.getStringExtra(SESSION);
@@ -86,9 +80,14 @@ public class Eskills extends GodotPlugin {
         return intent;
     }
 
-    @NonNull
-    @Override
-    public String getPluginName() {
-        return "GodotEskills";
+    /**
+     * Initilization of the Singleton
+     */
+    static public Godot.SingletonBase initialize(Activity p_activity) {
+        return new Eskills(p_activity);
+    }
+
+    public Eskills(Activity activity) {
+        this.activity = activity;
     }
 }
