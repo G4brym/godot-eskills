@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -24,17 +25,35 @@ public class Eskills extends GodotPlugin {
     private Activity activity;
     private String sessionToken;
 
+
     public Eskills(Godot godot) {
         super(godot);
         activity = godot.getActivity();
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult called");
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            sessionToken = data.getStringExtra(SESSION);
-            Log.d(TAG, "sessionToken: " + sessionToken);
+    public class Called implements Godot.ResultCallback {
+        public void callback(int requestCode, int resultCode, Intent data){
+            if(resultCode == Activity.RESULT_OK) {
+                Log.d(TAG,  "Sent Activated!");
+
+            }
+            else {
+                Log.d(TAG, "Not Send");
+            }
         }
+    }
+
+    public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if(resultCode == Activity.RESULT_OK) {
+            Log.d(TAG,  "Sent Activated!");
+
+        }
+        else {
+            Log.d(TAG, "Not Send");
+        }
+
     }
 
     @UsedByGodot
