@@ -8,27 +8,52 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import org.godotengine.godot.Godot;
+import org.godotengine.godot.plugin.GodotPlugin;
 import org.godotengine.godot.plugin.UsedByGodot;
 
 import java.util.List;
 
-public class Eskills extends Godot.SingletonBase {
+public class Eskills extends GodotPlugin {
     private static final int REQUEST_CODE = 123;
-    private static final String SESSION = "SESSION";
+    public static final String SESSION = "SESSION";
     private static final String TAG = "godot";
-
-    protected Activity activity = null;
+    private Activity activity;
     private String sessionToken;
 
-    @Override
-    protected void onMainActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult called");
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            sessionToken = data.getStringExtra(SESSION);
-            Log.d(TAG, "sessionToken: " + sessionToken);
+
+    public Eskills(Godot godot) {
+        super(godot);
+        activity = godot.getActivity();
+    }
+
+    public class Called implements Godot.ResultCallback {
+        public void callback(int requestCode, int resultCode, Intent data){
+            if(resultCode == Activity.RESULT_OK) {
+                Log.d(TAG,  "Sent Activated!");
+
+            }
+            else {
+                Log.d(TAG, "Not Send");
+            }
         }
+    }
+
+    public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if(resultCode == Activity.RESULT_OK) {
+            Log.d(TAG,  "Sent Activated!");
+
+        }
+        else {
+            Log.d(TAG, "Not Send");
+        }
+
     }
 
     @UsedByGodot
@@ -80,14 +105,9 @@ public class Eskills extends Godot.SingletonBase {
         return intent;
     }
 
-    /**
-     * Initilization of the Singleton
-     */
-    static public Godot.SingletonBase initialize(Activity p_activity) {
-        return new Eskills(p_activity);
-    }
-
-    public Eskills(Activity activity) {
-        this.activity = activity;
+    @NonNull
+    @Override
+    public String getPluginName() {
+        return "GodotEskills";
     }
 }
