@@ -7,53 +7,49 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.util.ArraySet;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import org.godotengine.godot.Dictionary;
 import org.godotengine.godot.Godot;
 import org.godotengine.godot.plugin.GodotPlugin;
+import org.godotengine.godot.plugin.SignalInfo;
 import org.godotengine.godot.plugin.UsedByGodot;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class Eskills extends GodotPlugin {
+public class GodotEskills extends GodotPlugin {
+    private static final String BASE_URL = "https://apichain.catappult.io/transaction/eskills?";
     private static final int REQUEST_CODE = 123;
     public static final String SESSION = "SESSION";
     private static final String TAG = "godot";
-    private Activity activity;
+    private final Activity activity;
     private String sessionToken;
 
-
-    public Eskills(Godot godot) {
+    public GodotEskills(Godot godot) {
         super(godot);
         activity = godot.getActivity();
     }
 
-    public class Called implements Godot.ResultCallback {
-        public void callback(int requestCode, int resultCode, Intent data){
-            if(resultCode == Activity.RESULT_OK) {
-                Log.d(TAG,  "Sent Activated!");
-
-            }
-            else {
-                Log.d(TAG, "Not Send");
-            }
-        }
-    }
-
     public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            Log.d(TAG, data.toString());
+            Log.d(TAG, String.valueOf(data.getData()));
+            Log.d(TAG, "resultCode: " + resultCode);
 
+            if (resultCode == RESULT_OK) {
+                sessionToken = data.getStringExtra(SESSION);
+                Log.d(TAG, "Session Token: " + sessionToken);
 
-        if(resultCode == Activity.RESULT_OK) {
-            Log.d(TAG,  "Sent Activated!");
-
+                emitSignal("match_found");
+            } else {
+                emitSignal("payment_error", data.toString());
+            }
         }
-        else {
-            Log.d(TAG, "Not Send");
-        }
-
     }
 
     @UsedByGodot
@@ -62,10 +58,21 @@ public class Eskills extends GodotPlugin {
     }
 
     @UsedByGodot
-    public void startMatch(String url) {
-        Log.d(TAG, "url: " + url);
+    public void findMatch(Dictionary matchConfiguration) {
+        String url = "";
+
+        for (Map.Entry<String, Object> entry : matchConfiguration.entrySet()) {
+            if (url.equals("")) {
+                url = BASE_URL + entry.getKey() + "=" + entry.getValue();
+            } else {
+                url = url.concat("&" + entry.getKey() + "=" + entry.getValue());
+            }
+        }
+
+        Log.d(TAG, "OSP url: " + url);
         Intent intent = buildTargetIntent(url);
         try {
+            emitSignal("payment_started");
             activity.startActivityForResult(intent, REQUEST_CODE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,5 +116,17 @@ public class Eskills extends GodotPlugin {
     @Override
     public String getPluginName() {
         return "GodotEskills";
+    }
+
+    @NonNull
+    @Override
+    public Set<SignalInfo> getPluginSignals() {
+        Set<SignalInfo> signals = new ArraySet<>();
+
+        signals.add(new SignalInfo("payment_started"));
+        signals.add(new SignalInfo("payment_error", String.class));
+        signals.add(new SignalInfo("match_found"));
+
+        return signals;
     }
 }

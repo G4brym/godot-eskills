@@ -8,12 +8,34 @@ This is a simple Godot Android plugin that allows you to integrate your game wit
 2. Grab and extract the latest binary and plugin config from the [releases tab](https://github.com/G4brym/godot-eskills/releases) into `res://android/plugins/`
 3. In your Android export settings, make sure the GodotEskills plugin is enabled
 
-Now you can get the Intent URL using the `AppLinks` singleton when your game starts:
+Now you can get the Intent URL using the `GodotEskills` singleton when your game starts:
 
 ```gdscript
-if Engine.has_singleton('GodotEskills'):
-	var godoteskills = Engine.get_singleton('GodotEskills')
-	godoteskills.startMatch()
+var eskills
+
+func _ready():
+    if Engine.has_singleton("GodotEskills"):
+        eskills = Engine.get_singleton("GodotEskills")
+
+        # These are all signals supported by the API
+        # You can drop some of these based on your needs
+        eskills.connect("payment_started", self, "_on_payment_started") # No params
+        eskills.connect("payment_error", self, "_on_payment_error") # Response message (string)
+        eskills.connect("match_found", self, "_on_match_found") # No params
+
+		eskills.findMatch({
+			value="1",
+			currency="USD",
+			product="1v1",
+			timeout="200",
+			domain="com.your.app",
+			environment="SANDBOX",
+			number_of_users="2",
+			user_name=$"Username".text,
+			user_id=$"Username".text,
+		})
+    else:
+        print("Android Eskills support is not enabled. Make sure you have enabled 'Custom Build' and the GodotEskills plugin in your Android export settings! Eskills will not work.")
 ```
 
 
