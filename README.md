@@ -23,17 +23,17 @@ func _ready():
         eskills.connect("payment_error", self, "_on_payment_error") # Response message (string)
         eskills.connect("match_found", self, "_on_match_found") # No params
 
-		eskills.findMatch({
-			value="1",
-			currency="USD",
-			product="1v1",
-			timeout="200",
-			domain="com.your.app",
-			environment="SANDBOX",
-			number_of_users="2",
-			user_name=$"Username".text,
-			user_id=$"Username".text,
-		})
+        eskills.findMatch({
+            value="1",
+            currency="USD",
+            product="1v1",
+            timeout="200",
+            domain="com.your.app",
+            environment="SANDBOX",
+            number_of_users="2",
+            user_name=$"Username".text,
+            user_id=$"Username".text,
+        })
     else:
         print("Android Eskills support is not enabled. Make sure you have enabled 'Custom Build' and the GodotEskills plugin in your Android export settings! Eskills will not work.")
 ```
