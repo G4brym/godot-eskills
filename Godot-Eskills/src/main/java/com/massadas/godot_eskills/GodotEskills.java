@@ -1,7 +1,5 @@
 package com.massadas.godot_eskills;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,14 +23,19 @@ import java.util.Set;
 public class GodotEskills extends GodotPlugin {
     private static final String BASE_URL = "https://apichain.catappult.io/transaction/eskills?";
     private static final int REQUEST_CODE = 123;
-    public static final String SESSION = "SESSION";
+    private static final int RESULT_OK = 0;
+    private static final String SESSION = "SESSION";
     private static final String TAG = "godot";
+
     private final Activity activity;
     private String sessionToken;
+
+    private final RoomApi roomApi;
 
     public GodotEskills(Godot godot) {
         super(godot);
         activity = godot.getActivity();
+        roomApi = new RoomApi();
     }
 
     public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
@@ -58,7 +61,17 @@ public class GodotEskills extends GodotPlugin {
     }
 
     @UsedByGodot
-    public void findMatch(Dictionary matchConfiguration) {
+    public Dictionary updateScore(int score, String status) {
+        return roomApi.patchRoom(score, status);
+    }
+
+    @UsedByGodot
+    public Dictionary getRoom() {
+        return roomApi.getRoom();
+    }
+
+    @UsedByGodot
+    public void findRoom(Dictionary matchConfiguration) {
         String url = "";
 
         for (Map.Entry<String, Object> entry : matchConfiguration.entrySet()) {
