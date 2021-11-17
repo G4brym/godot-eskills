@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -71,41 +70,41 @@ public class RoomApi {
     }
 
 
-    private static Dictionary jsonString2Dictionary(String jsonString ) throws org.json.JSONException {
+    private static Dictionary jsonString2Dictionary(String jsonString) throws org.json.JSONException {
         Dictionary keys = new Dictionary();
 
-        org.json.JSONObject jsonObject = new org.json.JSONObject( jsonString ); // HashMap
+        org.json.JSONObject jsonObject = new org.json.JSONObject(jsonString); // HashMap
         java.util.Iterator<?> keyset = jsonObject.keys(); // HM
 
         while (keyset.hasNext()) {
-            String key =  (String) keyset.next();
+            String key = (String) keyset.next();
             Object value = jsonObject.get(key);
-            if ( value instanceof org.json.JSONObject ) {
-                keys.put( key, jsonString2Dictionary( value.toString() ));
-            } else if ( value instanceof org.json.JSONArray) {
+            if (value instanceof org.json.JSONObject) {
+                keys.put(key, jsonString2Dictionary(value.toString()));
+            } else if (value instanceof org.json.JSONArray) {
                 org.json.JSONArray jsonArray = jsonObject.getJSONArray(key);
                 //JSONArray jsonArray = new JSONArray(value.toString());
-                keys.put( key, jsonArray2List( jsonArray ));
+                keys.put(key, jsonArray2List(jsonArray));
             } else {
-                keyNode( value);
-                keys.put( key, value );
+                keyNode(value);
+                keys.put(key, value);
             }
         }
         return keys;
     }
 
-    public static java.util.List<Object> jsonArray2List( org.json.JSONArray arrayOFKeys ) throws org.json.JSONException {
+    public static java.util.List<Object> jsonArray2List(org.json.JSONArray arrayOFKeys) throws org.json.JSONException {
         java.util.List<Object> array2List = new java.util.ArrayList<Object>();
-        for ( int i = 0; i < arrayOFKeys.length(); i++ )  {
-            if ( arrayOFKeys.opt(i) instanceof org.json.JSONObject ) {
+        for (int i = 0; i < arrayOFKeys.length(); i++) {
+            if (arrayOFKeys.opt(i) instanceof org.json.JSONObject) {
                 Map<String, Object> subObj2Map = jsonString2Dictionary(arrayOFKeys.opt(i).toString());
                 array2List.add(subObj2Map);
-            } else if ( arrayOFKeys.opt(i) instanceof org.json.JSONArray ) {
+            } else if (arrayOFKeys.opt(i) instanceof org.json.JSONArray) {
                 java.util.List<Object> subarray2List = jsonArray2List((org.json.JSONArray) arrayOFKeys.opt(i));
                 array2List.add(subarray2List);
             } else {
-                keyNode( arrayOFKeys.opt(i) );
-                array2List.add( arrayOFKeys.opt(i) );
+                keyNode(arrayOFKeys.opt(i));
+                array2List.add(arrayOFKeys.opt(i));
             }
         }
         return array2List;
