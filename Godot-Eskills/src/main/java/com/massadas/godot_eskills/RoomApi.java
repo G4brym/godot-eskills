@@ -5,6 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -93,18 +96,19 @@ public class RoomApi {
         return keys;
     }
 
-    public static java.util.List<Object> jsonArray2List(org.json.JSONArray arrayOFKeys) throws org.json.JSONException {
-        java.util.List<Object> array2List = new java.util.ArrayList<Object>();
+    public static Object[] jsonArray2List(org.json.JSONArray arrayOFKeys) throws org.json.JSONException {
+        Object[] array2List = new Object[arrayOFKeys.length()];
+
         for (int i = 0; i < arrayOFKeys.length(); i++) {
             if (arrayOFKeys.opt(i) instanceof org.json.JSONObject) {
-                Map<String, Object> subObj2Map = jsonString2Dictionary(arrayOFKeys.opt(i).toString());
-                array2List.add(subObj2Map);
+                Dictionary subObj2Map = jsonString2Dictionary(arrayOFKeys.opt(i).toString());
+                array2List[i] = subObj2Map;
             } else if (arrayOFKeys.opt(i) instanceof org.json.JSONArray) {
-                java.util.List<Object> subarray2List = jsonArray2List((org.json.JSONArray) arrayOFKeys.opt(i));
-                array2List.add(subarray2List);
+                Object[] subarray2List = jsonArray2List((org.json.JSONArray) arrayOFKeys.opt(i));
+                array2List[i] = subarray2List;
             } else {
                 keyNode(arrayOFKeys.opt(i));
-                array2List.add(arrayOFKeys.opt(i));
+                array2List[i] = arrayOFKeys.opt(i);
             }
         }
         return array2List;

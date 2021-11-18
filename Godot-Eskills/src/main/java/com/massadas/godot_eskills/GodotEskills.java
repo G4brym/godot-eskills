@@ -40,7 +40,8 @@ public class GodotEskills extends GodotPlugin {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == 0) {
                 sessionToken = data.getStringExtra("SESSION");
-                Log.d(TAG, "Session Token: " + sessionToken);
+                roomApi.setAuthorization(sessionToken);
+                Log.d(TAG, "Eskills Session Token: " + sessionToken);
 
                 emitSignal("match_found");
             } else {
