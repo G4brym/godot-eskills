@@ -23,8 +23,6 @@ import java.util.Set;
 public class GodotEskills extends GodotPlugin {
     private static final String BASE_URL = "https://apichain.catappult.io/transaction/eskills?";
     private static final int REQUEST_CODE = 123;
-    private static final int RESULT_OK = 0;
-    private static final String SESSION = "SESSION";
     private static final String TAG = "godot";
 
     private final Activity activity;
@@ -40,17 +38,13 @@ public class GodotEskills extends GodotPlugin {
 
     public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
-            Log.d(TAG, data.toString());
-            Log.d(TAG, String.valueOf(data.getData()));
-            Log.d(TAG, "resultCode: " + resultCode);
-
-            if (resultCode == RESULT_OK) {
-                sessionToken = data.getStringExtra(SESSION);
+            if (resultCode == 0) {
+                sessionToken = data.getStringExtra("SESSION");
                 Log.d(TAG, "Session Token: " + sessionToken);
 
                 emitSignal("match_found");
             } else {
-                emitSignal("payment_error", data.toString());
+                emitSignal("payment_error", resultCode, data.toString());
             }
         }
     }
@@ -137,7 +131,7 @@ public class GodotEskills extends GodotPlugin {
         Set<SignalInfo> signals = new ArraySet<>();
 
         signals.add(new SignalInfo("payment_started"));
-        signals.add(new SignalInfo("payment_error", String.class));
+        signals.add(new SignalInfo("payment_error", Integer.class, String.class));
         signals.add(new SignalInfo("match_found"));
 
         return signals;

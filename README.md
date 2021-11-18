@@ -20,10 +20,10 @@ func _ready():
         # These are all signals supported by the API
         # You can drop some of these based on your needs
         eskills.connect("payment_started", self, "_on_payment_started") # No params
-        eskills.connect("payment_error", self, "_on_payment_error") # Response message (string)
+        eskills.connect("payment_error", self, "_on_payment_error") # Response resultCode (int), message (string)
         eskills.connect("match_found", self, "_on_match_found") # No params
 
-        eskills.findMatch({
+        eskills.findRoom({
             value="1",
             currency="USD",
             product="1v1",
@@ -34,6 +34,18 @@ func _ready():
             user_name=$"Username".text,
             user_id=$"Username".text,
         })
+        
+        # After a match is started you can get the other player's and room details with this
+        # You should also use this method to periodicaly check if the game has already finished
+        eskills.getRoom()
+        
+        # Update the scores
+        eskills.updateScore(12, "PLAYING")
+        
+        # If you need to make any additional request that is not covered by this lib you can 
+        # get the session token with this
+        eskills.getSessionToken()
+
     else:
         print("Android Eskills support is not enabled. Make sure you have enabled 'Custom Build' and the GodotEskills plugin in your Android export settings! Eskills will not work.")
 ```
