@@ -3,16 +3,14 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdk 23
-        targetSdk 31
+        targetSdk 30
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     libraryVariants.all { variant ->
@@ -20,21 +18,10 @@ android {
             output.outputFileName = "GodotEskills.${variant.name}.aar"
         }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    compileOnly files('libs/godot-lib.3.4.stable.release.aar')
+    compileOnly fileTree(dir: 'libs', include: ['godot-lib*.aar'])
 }

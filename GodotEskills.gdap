@@ -1,0 +1,9 @@
+[config]
+
+name="GodotEskills"
+binary_type="local"
+binary="GodotEskills.debug.aar"
+
+[dependencies]
+
+remote=["com.squareup.okhttp3:okhttp:4.9.0"]
