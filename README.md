@@ -21,7 +21,7 @@ func _ready():
         # You can drop some of these based on your needs
         eskills.connect("payment_started", self, "_on_payment_started") # No params
         eskills.connect("payment_error", self, "_on_payment_error") # Response resultCode (int), message (string)
-        eskills.connect("match_found", self, "_on_match_found") # No params
+        eskills.connect("room_found", self, "_on_room_found") # No params
 
         eskills.findRoom({
             value="1",

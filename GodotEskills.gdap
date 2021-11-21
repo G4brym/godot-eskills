@@ -2,7 +2,7 @@
 
 name="GodotEskills"
 binary_type="local"
-binary="GodotEskills.debug.aar"
+binary="GodotEskills.release.aar"
 
 [dependencies]
 

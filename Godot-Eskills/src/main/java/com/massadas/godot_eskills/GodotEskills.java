@@ -43,7 +43,7 @@ public class GodotEskills extends GodotPlugin {
                 roomApi.setAuthorization(sessionToken);
                 Log.d(TAG, "Eskills Session Token: " + sessionToken);
 
-                emitSignal("match_found");
+                emitSignal("room_found");
             } else {
                 emitSignal("payment_error", resultCode, data.toString());
             }
@@ -133,7 +133,7 @@ public class GodotEskills extends GodotPlugin {
 
         signals.add(new SignalInfo("payment_started"));
         signals.add(new SignalInfo("payment_error", Integer.class, String.class));
-        signals.add(new SignalInfo("match_found"));
+        signals.add(new SignalInfo("room_found"));
 
         return signals;
     }
