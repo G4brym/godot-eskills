@@ -36,7 +36,7 @@ public class RoomApi {
         Request request = new Request.Builder()
                 .url(BASE_URL)
                 .header("Authorization", "Bearer " + authorization)
-                .post(body)
+                .patch(body)
                 .build();
 
         Dictionary Jobject = null;
