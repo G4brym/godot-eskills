@@ -8,7 +8,7 @@ This is a simple Godot Android plugin that allows you to integrate your game wit
 2. Grab and extract the latest binary and plugin config from the [releases tab](https://github.com/G4brym/godot-eskills/releases) into `res://android/plugins/`
 3. In your Android export settings, make sure the GodotEskills plugin is enabled
 
-Now you can get the Intent URL using the `GodotEskills` singleton when your game starts:
+Now you can find and manage eskills rooms using the `GodotEskills` singleton when your game starts:
 
 ```gdscript
 var eskills
